@@ -1,0 +1,31 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+LAYOUT_WITH_LEGEND()
+
+title Архитектура 1С
+Person(Клиент,"Клиент","Клиент")
+
+System_Boundary(СистемаЛояльности, "1С: ERP") {
+    Container(ПодсистемаУчетаКарт, "Подсистема лояльности")
+}
+
+System_Boundary(Сайт, "Сайт") {
+    Container(ЛичныйКабинет, "Личный кабинет")
+    Container(СерверОбмена, "Сервер обмена данными")
+}
+
+'System(Шина,"1С Шина")
+'System(WMS,"1С WMS")
+System_Ext(RabbitMQ,"RabbitMQ")
+'System(Сайт,"Сайт")
+
+Rel(Клиент, ЛичныйКабинет, "Запрос на оформление карты лояльности", "HTTPS")
+
+Rel(RabbitMQ, ПодсистемаУчетаКарт, "Заявка на выпуск карты", "HTTPS")
+'Rel(СистемаЛояльности, Клиент, "Карта", "HTTPS")
+Rel(СерверОбмена, RabbitMQ, "Заявка на выпуск карты", "HTTPS")
+
+'Rel(Шина, WMS, "Номенклатура", "HTTPS")
+
+@enduml
